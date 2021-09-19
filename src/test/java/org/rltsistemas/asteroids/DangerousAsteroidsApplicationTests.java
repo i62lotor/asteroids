@@ -33,6 +33,13 @@ class DangerousAsteroidsApplicationTests {
 				.queryParam("planet", "Earth")
 				.build()).exchange().expectStatus()
 				.isOk();
+	}
+	
+	@Test
+	public void whenNoPlanetQueryParamShouldReturn400Status() throws Exception {
 
+		client.get().uri(uriBuilder -> uriBuilder.pathSegment("asteroids")
+				.build()).exchange().expectStatus()
+				.is4xxClientError();
 	}
 }
