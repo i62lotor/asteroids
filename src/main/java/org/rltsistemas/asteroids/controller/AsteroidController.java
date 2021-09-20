@@ -18,7 +18,7 @@ package org.rltsistemas.asteroids.controller;
 import java.util.List;
 
 import org.rltsistemas.asteroids.model.Asteroid;
-import org.rltsistemas.asteroids.service.DangerousAsteroidsService;
+import org.rltsistemas.asteroids.service.AsteroidsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -36,7 +36,7 @@ import lombok.extern.slf4j.Slf4j;
 public class AsteroidController {
 
 	@Autowired
-	private DangerousAsteroidsService asteroidsService;
+	private AsteroidsService asteroidsService;
 	
 	/**
 	 * Obtiene el número (por defecto 3) de asteroides de mayor tamaño con riesgo de colisión con el planeta indicado

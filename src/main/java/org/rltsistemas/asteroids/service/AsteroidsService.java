@@ -27,23 +27,24 @@ import org.springframework.stereotype.Service;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Responsable de determinar los asteroides con mas riesgo de colisión.
+ * Responsable de determinar los asteroides recuperados.
  */
 @Slf4j
 @Service
-public class DangerousAsteroidsService {
+public class AsteroidsService {
 
 	private NasaNeosService nasaNeosService;
 
 	private AsteroidMapper asteroidMapper;
 
-	public DangerousAsteroidsService(NasaNeosService nasaNeosService, AsteroidMapper asteroidMapper) {
+	public AsteroidsService(NasaNeosService nasaNeosService, AsteroidMapper asteroidMapper) {
 		super();
 		this.nasaNeosService = nasaNeosService;
 		this.asteroidMapper = asteroidMapper;
 	}
 
 	/**
+	 * Obtiene los asteroides de mayor tamaño medio con riesgo de colisión en un planeta
 	 * TODO: mejor idea ordenar y limitar los elementos recuperados (neos) de la
 	 * nasa, asi se evita el mapeo de mas Asteroides de la cuenta.
 	 * 
