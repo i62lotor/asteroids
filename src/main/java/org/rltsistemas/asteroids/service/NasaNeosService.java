@@ -66,7 +66,12 @@ public class NasaNeosService {
 	 */
 	public List<Neo> locateNearEarthObjects() {
 		
-		String responseJson = webClient.get()
+		return neoMapper.map(httpGetNeosWS());
+	}
+
+
+	private String httpGetNeosWS() {
+		return webClient.get()
         .uri(uriBuilder -> uriBuilder
                 .queryParam(startDate, formatDate(LocalDate.now()))
                 .queryParam(endDate, formatDate(LocalDate.now().plusDays(days)))
@@ -74,9 +79,7 @@ public class NasaNeosService {
                 .build())
         .retrieve()
         .bodyToMono(String.class)
-        .block();
-		
-		return neoMapper.map(responseJson);
+        .block();		
 	}
 	
 	
