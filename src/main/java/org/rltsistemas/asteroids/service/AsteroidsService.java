@@ -44,7 +44,7 @@ public class AsteroidsService {
 	}
 
 	/**
-	 * Obtiene los asteroides de mayor tamaño medio con riesgo de colisión en un planeta
+	 * Obtiene el número de asteroides indicado ordenados por tamaño medio con riesgo de colisión en un planeta.
 	 * TODO: mejor idea ordenar y limitar los elementos recuperados (neos) de la
 	 * nasa, asi se evita el mapeo de mas Asteroides de la cuenta.
 	 * 
@@ -53,12 +53,12 @@ public class AsteroidsService {
 	 * @return
 	 */
 	public List<Asteroid> getDangerousAsteroids(String planetName, int numberOfAsterois) {
-		return asteroidMapper.map(getMostPotentiallyHazardous(planetName, numberOfAsterois),planetName).stream()
+		return asteroidMapper.map(getMostPotentiallyHazardous(planetName),planetName).stream()
 				.sorted(Comparator.comparingDouble(Asteroid::getEstimatedAverageDiameter).reversed())
 				.limit(numberOfAsterois).collect(Collectors.toList());
 	}
 
-	private List<Neo> getMostPotentiallyHazardous(String planetName, int numberOfAsterois) {
+	private List<Neo> getMostPotentiallyHazardous(String planetName) {
 		List<Neo> neos = this.nasaNeosService.locateNearEarthObjects();
 		log.info("Se han recuperado " + neos.size() + " NEOs del servicio de la nasa");
 
