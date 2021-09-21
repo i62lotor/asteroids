@@ -31,7 +31,6 @@ El servicio devuelve un JSON compuesto por información de los objetos cercanos 
 ## TODO
 - Revisar los TODOs del código.
 - Mejorar cobertura de test.
-- Utilizar Mockito para mejorar los test.
 - Terminar de modelar el objeto de la respuesta del servicio de la Nasa, para mapear el json de una forma mas directa y sencilla.
 
 ## Normas de contribución
