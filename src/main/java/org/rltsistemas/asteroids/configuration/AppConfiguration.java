@@ -20,7 +20,12 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.reactive.ReactorClientHttpConnector;
 import org.springframework.web.reactive.function.client.WebClient;
+import org.springframework.web.reactive.function.client.WebClient.Builder;
+
+import reactor.netty.http.client.HttpClient;
+import reactor.netty.transport.ProxyProvider;
 
 
 @Configuration
@@ -29,12 +34,36 @@ public class AppConfiguration {
 	@Value("${nasa.neo.base.url}")
 	private String neoBaseUrl;
 	
+	@Value("${proxy.url:no_proxy}")
+	private String proxyUrl;
+	
+	@Value("${proxy.port}")
+	private int proxyPort;
+	
 	@Bean
 	public WebClient webClient() {
-		return WebClient.builder()
+		 Builder webClientBuilder = WebClient.builder()
 		        .baseUrl(neoBaseUrl)
 		        .defaultHeader(HttpHeaders.CONTENT_TYPE,
 		        		MediaType.APPLICATION_JSON_VALUE)
-		        .build();
+		     ;
+		 if(!"no_proxy".equals(proxyUrl)) {
+			 webClientBuilder.clientConnector(proxyConector());
+		 }
+		 
+		 return webClientBuilder.build();
+	}
+	
+	
+	private ReactorClientHttpConnector proxyConector() {
+		@SuppressWarnings("deprecation")
+		HttpClient httpClient = HttpClient.create()
+	            .tcpConfiguration(tcpClient -> tcpClient
+	                .proxy(proxy -> proxy
+	                    .type(ProxyProvider.Proxy.HTTP)
+	                    .host(proxyUrl)
+	                    .port(proxyPort)));
+
+		return new ReactorClientHttpConnector(httpClient);
 	}
 }

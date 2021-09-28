@@ -12,7 +12,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.rltsistemas.asteroids.mapper.AsteroidMapper;
-import org.rltsistemas.asteroids.mapper.NeoMapper;
 import org.rltsistemas.asteroids.model.Asteroid;
 import org.rltsistemas.asteroids.model.Neo;
 import org.rltsistemas.asteroids.service.AsteroidsService;
@@ -51,7 +50,7 @@ public class AsteroidsServiceMockTest {
 		try {
 			asteroidsService = new AsteroidsService(neosService, asteroidMapper);
 			response = new String(nasaNeoWSResponseFile.getInputStream().readAllBytes(), "UTF-8");
-			List<Neo> neos = neoMapper.map(response);
+			List<Neo> neos = neoMapper.autoMap(response);
 	        when(neosService.locateNearEarthObjects()).thenReturn(neos);
 		} catch (IOException e) {
 			e.printStackTrace();

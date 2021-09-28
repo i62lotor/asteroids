@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.List;
 
 import org.junit.jupiter.api.Test;
-import org.rltsistemas.asteroids.mapper.NeoMapper;
 import org.rltsistemas.asteroids.model.Neo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -17,6 +16,9 @@ import org.springframework.core.io.Resource;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 @SpringBootTest
 class NeoMapperTest {
 
@@ -54,6 +56,21 @@ class NeoMapperTest {
 			String response = new String(nasaNeoWSResponseFile.getInputStream().readAllBytes(), "UTF-8"); 
 			List<Neo> neos = responseMapper.map(response);
 			
+			assertTrue(neos.size() == 19);
+		} catch (Exception e) {
+			e.printStackTrace();
+			fail();
+		}
+		
+	}
+	
+	@Test
+	void givenNeoWSJsonResponseWhenMapObjThenGetNeoObjectList() {
+		try {
+			
+			String response = new String(nasaNeoWSResponseFile.getInputStream().readAllBytes(), "UTF-8"); 
+			List<Neo> neos = responseMapper.autoMap(response);
+			log.info(neos.toString());
 			assertTrue(neos.size() == 19);
 		} catch (Exception e) {
 			e.printStackTrace();

@@ -17,6 +17,10 @@ package org.rltsistemas.asteroids.model;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.Map;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.Data;
 
@@ -26,11 +30,21 @@ import lombok.Data;
  *
  */
 @Data
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CloseApproach implements Serializable{
 
 	private static final long serialVersionUID = -1041652665379791985L;
 
+	@JsonProperty("orbiting_body")
 	private String Orbitingbody;
+	//@JsonProperty("kilometers_per_second")
 	private double relativeVelocity;
+	@JsonProperty("close_approach_date")
 	private String date;
+	
+	@JsonProperty("relative_velocity")
+	private void mapNested(Map<String, String> kmps) {
+		this.relativeVelocity = Double.valueOf(kmps.get("kilometers_per_second"));
+		
+	}
 }

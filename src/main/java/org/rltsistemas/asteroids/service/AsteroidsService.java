@@ -68,7 +68,6 @@ public class AsteroidsService {
 				.collect(Collectors.toList());
 		log.info("- " + dangerousNeos.size() + " Potentially Hazardous");
 		return dangerousNeos;
-
 	}
 
 }

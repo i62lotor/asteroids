@@ -19,7 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import org.rltsistemas.asteroids.mapper.NeoMapper;
+import org.rltsistemas.asteroids.model.NasaNeoWsResponse;
 import org.rltsistemas.asteroids.model.Neo;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -48,13 +48,10 @@ public class NasaNeosService {
 	@Value("${nasa.neo.days.to.search:7}")
 	private int days;
 	
-	private NeoMapper neoMapper;
-
 	private WebClient webClient;
 	
-	public NasaNeosService(WebClient webClient, NeoMapper neoMapper) {
+	public NasaNeosService(WebClient webClient) {
 		super();
-		this.neoMapper = neoMapper;
 		this.webClient = webClient;
 	}
 
@@ -65,12 +62,11 @@ public class NasaNeosService {
 	 * @return 
 	 */
 	public List<Neo> locateNearEarthObjects() {
-		
-		return neoMapper.map(httpGetNeosWS());
+		return httpGetNeosWS().getAllNeos();
 	}
 
 
-	private String httpGetNeosWS() {
+	private NasaNeoWsResponse httpGetNeosWS() {
 		return webClient.get()
         .uri(uriBuilder -> uriBuilder
                 .queryParam(startDate, formatDate(LocalDate.now()))
@@ -78,10 +74,9 @@ public class NasaNeosService {
                 .queryParam(apiKey, nasaApiKey)
                 .build())
         .retrieve()
-        .bodyToMono(String.class)
+        .bodyToMono(NasaNeoWsResponse.class)
         .block();		
-	}
-	
+	}	
 	
 	private String formatDate(LocalDate localdate) {
 		return localdate.format(DateTimeFormatter.ofPattern("yyyy-MM-dd"));	

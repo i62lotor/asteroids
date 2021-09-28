@@ -16,6 +16,7 @@
 package org.rltsistemas.asteroids.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.rltsistemas.asteroids.model.Asteroid;
 import org.rltsistemas.asteroids.service.AsteroidsService;
@@ -44,7 +45,6 @@ public class AsteroidController {
 	 * @param maxNumber: número máximo de asteroides a mostrar
 	 * @return
 	 */
-	
 	@GetMapping(value = "/asteroids", produces = MediaType.APPLICATION_JSON_VALUE)
 	public HttpEntity<List<Asteroid>> getMostDangerousAsteroids(
 			@RequestParam(name = "planet", required = true) String planetName,
@@ -53,18 +53,9 @@ public class AsteroidController {
 		try {
 			List<Asteroid> asteroids = asteroidsService.getDangerousAsteroids(planetName, maxNumber);
 			
-			ResponseEntity<List<Asteroid>> response;
-			
-			if (asteroids.isEmpty()) {
-				response = new ResponseEntity<>(asteroids, HttpStatus.NO_CONTENT);
-			} else {
-				response = new ResponseEntity<>(asteroids,  HttpStatus.OK );
-			}
-			return response;
-		
+			return ResponseEntity.of(Optional.ofNullable(asteroids));
 		}catch (Exception e) {
 			log.error("ERROR no esperado: "+e);
-			
 			throw new ResponseStatusException(
 			           HttpStatus.I_AM_A_TEAPOT, "ups!!!", e);
 		}
