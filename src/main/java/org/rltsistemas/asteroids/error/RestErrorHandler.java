@@ -15,9 +15,6 @@
  ******************************************************************************/
 package org.rltsistemas.asteroids.error;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpEntity;
@@ -41,9 +38,9 @@ public class RestErrorHandler {
 	@ExceptionHandler(value = { MissingServletRequestParameterException.class, IllegalArgumentException.class })
 	@ResponseStatus(HttpStatus.BAD_REQUEST)
 	@ResponseBody
-	public HttpEntity<Map<String, Object>> processBadRequest(HttpServletRequest req, Exception ex) {
+	public HttpEntity<Error> processBadRequest(HttpServletRequest req, Exception ex) {
 		log.warn("Error en los parámetros de entrada: "+req.getRequestURI());
-		final Map<String, Object> response = getErrorResponse(req, ex, HttpStatus.BAD_REQUEST);
+		final Error response = getErrorResponse(req, ex, HttpStatus.BAD_REQUEST);
 		
 		return new ResponseEntity<>(response,  HttpStatus.BAD_REQUEST );
 	}
@@ -51,27 +48,20 @@ public class RestErrorHandler {
 	@ExceptionHandler(value = { WebClientRequestException.class, WebClientResponseException.class })
 	@ResponseStatus(HttpStatus.BAD_GATEWAY)
 	@ResponseBody
-	public HttpEntity<Map<String, Object>> processWebClientException(HttpServletRequest req, Exception ex) {
+	public HttpEntity<Error> processWebClientException(HttpServletRequest req, Exception ex) {
 		log.warn("Error en el servicio de la nasa");
-		final Map<String, Object> response = getErrorResponse(req, ex, HttpStatus.BAD_GATEWAY);
+		final Error response = getErrorResponse(req, ex, HttpStatus.BAD_GATEWAY);
 		
 		return new ResponseEntity<>(response,  HttpStatus.BAD_GATEWAY );
 	}
 	
-	/**
-	 * Llegado el momento sería conveniente modelar el Error. Para este ejemplo veo suficiente así.
-	 * @param req
-	 * @param ex
-	 * @param status
-	 * @return
-	 */
-	private Map<String, Object> getErrorResponse(HttpServletRequest req, Exception ex, HttpStatus status) {
-		final Map<String, Object> response = new HashMap<>();
-		response.put("timestamp", System.currentTimeMillis());
-		response.put("status", status.value());
-		response.put("error", status.name());
-		response.put("messge", ex.getMessage());		
-		response.put("path", req.getRequestURI().substring(req.getContextPath().length()));
-		return response;
+	
+	private Error getErrorResponse(HttpServletRequest req, Exception ex, HttpStatus status) {
+		return Error.builder().status(status.value()).error(status.name())
+				.message(ex.getMessage())
+				.path(req.getRequestURI().substring(req.getContextPath().length()))
+				.build();
+		
+		
 	}
 }
