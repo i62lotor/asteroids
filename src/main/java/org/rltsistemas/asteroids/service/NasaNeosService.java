@@ -48,11 +48,11 @@ public class NasaNeosService {
 	@Value("${nasa.neo.days.to.search:7}")
 	private int days;
 	
-	private WebClient webClient;
+	private WebClient.Builder webClientBuilder;
 	
-	public NasaNeosService(WebClient webClient) {
+	public NasaNeosService(WebClient.Builder webClientBuilder) {
 		super();
-		this.webClient = webClient;
+		this.webClientBuilder = webClientBuilder;
 	}
 
 
@@ -67,7 +67,7 @@ public class NasaNeosService {
 
 
 	private NasaNeoWsResponse httpGetNeosWS() {
-		return webClient.get()
+		return webClientBuilder.build().get()
         	.uri(uriBuilder -> uriBuilder
                 .queryParam(startDate, formatDate(LocalDate.now()))
                 .queryParam(endDate, formatDate(LocalDate.now().plusDays(days)))

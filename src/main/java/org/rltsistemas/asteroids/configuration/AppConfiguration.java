@@ -41,7 +41,7 @@ public class AppConfiguration {
 	private int proxyPort;
 	
 	@Bean
-	public WebClient webClient() {
+	public WebClient.Builder webClientBuilder() {
 		 Builder webClientBuilder = WebClient.builder()
 		        .baseUrl(neoBaseUrl)
 		        .defaultHeader(HttpHeaders.CONTENT_TYPE,
@@ -51,7 +51,7 @@ public class AppConfiguration {
 			 webClientBuilder.clientConnector(proxyConector());
 		 }
 		 
-		 return webClientBuilder.build();
+		 return webClientBuilder;
 	}
 	
 	
